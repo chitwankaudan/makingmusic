@@ -1,0 +1,21 @@
+name: music
+
+channels:
+  - pytorch
+  - defaults
+dependencies:
+  - python>=3.7.0
+  - ipython>=3.2.1
+  - jupyter
+  - ipykernel
+  - nb_conda
+  - matplotlib>=1.5.1
+  - scikit-learn=0.20.0
+  - numpy>=1.9.1
+  - scipy>=0.14.1
+  - wget
+  - mkl
+  - pytorch
+  - torchvision
+pip:
+  - mido=1.2.9
