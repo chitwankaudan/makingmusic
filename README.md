@@ -18,4 +18,8 @@ Simple GAN vs. Simple RNN
 [Simply LSTM for music gen](https://github.com/subpath/Keras_music_gereration/blob/master/Music%20gerenation%20with%20Keras%20and%20TF.ipynb)
 - GAN is tougher to train with less impressive results than the simple RNN
 
+## LSTM Approach
 
+- [LSTM Based Music Generation System](https://arxiv.org/ftp/arxiv/papers/1908/1908.01080.pdf)
+- [Attentional networks for music generation](https://arxiv.org/pdf/2002.03854.pdf)
+- [Generating Music using an LSTM Network](https://arxiv.org/ftp/arxiv/papers/1804/1804.07300.pdf)
