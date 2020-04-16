@@ -1,10 +1,10 @@
-name: music
+name: cs7643music
 
 channels:
   - pytorch
   - defaults
 dependencies:
-  - python>=3.7.0
+  - python>=3.7
   - ipython>=3.2.1
   - jupyter
   - ipykernel
@@ -13,9 +13,9 @@ dependencies:
   - scikit-learn=0.20.0
   - numpy>=1.9.1
   - scipy>=0.14.1
-  - wget
   - mkl
   - pytorch
   - torchvision
-pip:
-  - mido=1.2.9
+  - pip
+  - pip:
+    - mido=1.2.9
