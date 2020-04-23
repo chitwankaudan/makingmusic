@@ -1,5 +1,4 @@
 ###source: https://github.com/nikhil-kotecha/Generating_Music/blob/master/midi_musical_matrix.py
-
 import midi
 import numpy as np
 
