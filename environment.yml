@@ -9,6 +9,7 @@ dependencies:
   - jupyter
   - ipykernel
   - nb_conda
+  - h5py
   - matplotlib>=1.5.1
   - scikit-learn=0.20.0
   - numpy>=1.9.1
@@ -18,4 +19,5 @@ dependencies:
   - torchvision
   - pip
   - pip:
-    - mido=1.2.9
+    - mido==1.2.9
+    - pretty_midi
