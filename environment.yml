@@ -21,3 +21,4 @@ dependencies:
   - pip:
     - mido==1.2.9
     - pretty_midi
+    - music21
