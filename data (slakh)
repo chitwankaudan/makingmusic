@@ -1,5 +1,7 @@
-Not transposed:
-https://drive.google.com/file/d/1o4zkBqlKNBuIKsugD4JpV5LcRK5eeu5G/view?usp=sharing
+- Unzip this file:
+https://drive.google.com/file/d/1Kr2dy-wNLX21FT-X5Nl6bPt9u9tpZru_/view?usp=sharing
 
-Transposed:
-https://drive.google.com/file/d/1P4PMkt2WyP_Gp39Yb3m1ZHNfVNJ0dY6G/view?usp=sharing
+- Run generate dataset.ipynb
+- Choose the range of years, and the desired instrument, then run the rest of the code.
+- A new folder will be created with the midi files from only the years and instrument you indicated.
+- All midi files are transposed to either Cmajor or Aminor, depending on the mode of the original song.
