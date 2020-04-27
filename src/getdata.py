@@ -11,7 +11,8 @@ num_files = 500
 def getSegment(filename, num_time_steps):
     # Open state matrix file
     with h5py.File(filename, 'r') as hf:
-        matrix = hf[hf.keys()[0]][:]
+        key_iter = iter(hf.keys())
+        matrix = hf[next(key_iter)][:]
 
     # Pick a random starting point, and collect num_time_steps length sample
     start = random.randrange(0,len(matrix)-num_time_steps,division_len)

@@ -19,7 +19,7 @@ class MusicGeneration(nn.Module):
         self.dropout = nn.Dropout(p=0.2)
 
     def init_hidden(self):
-        self.hidden_time0 = (torch.ones(self.time_hidden_size, time_sequence_len), torch.ones(self.time_hidden_size, time_sequence_len))
+        self.hidden_time0 = (torch.ones(self.time_hidden_size, self.time_sequence_len), torch.ones(self.time_hidden_size, self.time_sequence_len))
         self.hidden_note0 = (torch.ones(self.time_hidden_size * self.time_sequence_len), torch.ones(self.time_hidden_size * self.time_sequence_len))
 
     def forward(self, x):
