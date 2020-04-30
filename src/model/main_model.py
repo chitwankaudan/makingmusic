@@ -53,23 +53,11 @@ class MusicGenerationV2(nn.Module):
 
         x = x.permute(0, 2, 3, 1)
 
-        # time_outs = torch.empty(batch_size, self.time_sequence_len, self.time_hidden_size, 78, device=self.device)
-        # for i in range(x.shape[3]):
-        #     time_out, hidden_time_n = self.lstm_time0(x[:, :, :, i], hidden_time0)
-        #     # time_out.shape = torch.Size([10, 256, 36])
-
-        #     time_outs[:, :, :, i] = time_out # time_outs.append(time_out)
-
         time_outs = torch.stack([
             self.lstm_time0[i](x_i, hidden_time0)[0] for i, x_i in enumerate(torch.unbind(x, dim=3), 0)
         ], dim=3)
 
         x = time_outs.permute(0, 3, 2, 1)
-
-        # note_outs = torch.empty(batch_size, self.time_sequence_len, 78, 2, device=self.device)
-        # for i in range(x.shape[3]):
-        #     note_out, hidden_note_n = self.lstm_note0(x[:, :, :, i], hidden_note0)
-        #     note_outs[:, i, :, :] = note_out
 
         note_outs = torch.stack([
             self.lstm_note0[i](x_i, hidden_note0)[0] for i, x_i in enumerate(torch.unbind(x, dim=3), 0)

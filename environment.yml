@@ -20,5 +20,8 @@ dependencies:
   - pip
   - pip:
     - mido==1.2.9
+    - py-midi
     - pretty_midi
     - music21
+    - mir_eval
+    - librosa
