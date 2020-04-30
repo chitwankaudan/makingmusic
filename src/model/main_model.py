@@ -5,9 +5,9 @@ import torch.nn as nn
     This uses 2 LSTM networks in sequence similar/identically to the paper
     https://arxiv.org/ftp/arxiv/papers/1804/1804.07300.pdf
 '''
-class MusicGeneration(nn.Module):
+class MusicGenerationV2(nn.Module):
     def __init__(self, time_sequence_len, batch_size, time_hidden_size, data_type=torch.DoubleTensor, device=torch.device("cpu")):
-        super(MusicGeneration, self).__init__()
+        super(MusicGenerationV2, self).__init__()
 
         self.num_layers = 1
         self.num_directions = 1
@@ -19,8 +19,8 @@ class MusicGeneration(nn.Module):
         self.device = device
         self.init_hidden()
 
-        self.lstm_time0 = nn.LSTM(input_size=80, hidden_size=time_hidden_size, batch_first=True)
-        self.lstm_note0 = nn.LSTM(input_size=time_hidden_size, hidden_size=2, batch_first=True)
+        self.lstm_time0 = nn.ModuleList([ nn.LSTM(input_size=80, hidden_size=time_hidden_size, batch_first=True) for _ in range(78) ])
+        self.lstm_note0 = nn.ModuleList([ nn.LSTM(input_size=time_hidden_size, hidden_size=2, batch_first=True) for _ in range(self.time_sequence_len) ])
 
         self.dropout = nn.Dropout(p=0.2)
 
@@ -53,19 +53,27 @@ class MusicGeneration(nn.Module):
 
         x = x.permute(0, 2, 3, 1)
 
-        time_outs = torch.empty(batch_size, self.time_sequence_len, self.time_hidden_size, 78, device=self.device)
-        for i in range(x.shape[3]):
-            time_out, hidden_time_n = self.lstm_time0(x[:, :, :, i], hidden_time0)
-            # time_out.shape = torch.Size([10, 256, 36])
+        # time_outs = torch.empty(batch_size, self.time_sequence_len, self.time_hidden_size, 78, device=self.device)
+        # for i in range(x.shape[3]):
+        #     time_out, hidden_time_n = self.lstm_time0(x[:, :, :, i], hidden_time0)
+        #     # time_out.shape = torch.Size([10, 256, 36])
 
-            time_outs[:, :, :, i] = time_out # time_outs.append(time_out)
+        #     time_outs[:, :, :, i] = time_out # time_outs.append(time_out)
+
+        time_outs = torch.stack([
+            self.lstm_time0[i](x_i, hidden_time0)[0] for i, x_i in enumerate(torch.unbind(x, dim=3), 0)
+        ], dim=3)
 
         x = time_outs.permute(0, 3, 2, 1)
 
-        note_outs = torch.empty(batch_size, self.time_sequence_len, 78, 2, device=self.device)
-        for i in range(x.shape[3]):
-            note_out, hidden_note_n = self.lstm_note0(x[:, :, :, i], hidden_note0)
-            note_outs[:, i, :, :] = note_out
+        # note_outs = torch.empty(batch_size, self.time_sequence_len, 78, 2, device=self.device)
+        # for i in range(x.shape[3]):
+        #     note_out, hidden_note_n = self.lstm_note0(x[:, :, :, i], hidden_note0)
+        #     note_outs[:, i, :, :] = note_out
+
+        note_outs = torch.stack([
+            self.lstm_note0[i](x_i, hidden_note0)[0] for i, x_i in enumerate(torch.unbind(x, dim=3), 0)
+        ], dim=1)
 
         x = note_outs.view(batch_size, self.time_sequence_len, -1) # x.shape = torch.Size([10, 256, 78, 2])
 
