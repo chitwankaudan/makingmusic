@@ -1,4 +1,4 @@
-from music21 import converter, instrument, note, chord, stream
+from music21 import *
 import glob
 import re
 import os
@@ -74,7 +74,7 @@ class Extract:
 				break # break out of outer loop
 
 		# Save notes
-		with open(self.clean_path +"/notes.pkl", 'wb') as filepath:
+		with open(self.clean_path +"/"+ self.track + "_notes.pkl", 'wb') as filepath:
 			pickle.dump(self.notes, filepath)
 
 
@@ -90,9 +90,34 @@ class Extract:
 			duration = float(re.findall(" \d*\.?\d+",duration)[0]) 
 
 			if (name==self.track) & (duration>=self.min_length):
-				elements_to_parse = parts[i].recurse() 
+				elements_to_parse =  self.transposeKey(parts[i])
+				if elements_to_parse != None: 
+					elements_to_parse = parts[i].recurse() 
 				break # Stop after extracting 1 track from each song
 		return elements_to_parse
+
+
+	def transposeKey(self,part):
+		"""
+		Transposes all majors keys to Cmajor and minor keys to Aminor
+		"""
+		# Music21 will try to detect key for the part
+		try:
+			key = part.analyze('key')
+		except: # if music21 can't detect key, skip song
+			return None
+
+		#source: https://stackoverflow.com/questions/37494229/music21-transpose-streams-to-a-given-key
+		if key.mode == 'major': #transpose all major keys to C
+			steps_to_C = interval.Interval(key.tonic, pitch.Pitch('C'))
+			sNew = part.transpose(steps_to_C)
+			return sNew
+		elif key.mode == 'minor': #transpose all minor keys to A
+			steps_to_A = interval.Interval(key.tonic, pitch.Pitch('A'))
+			sNew = part.transpose(steps_to_A)
+			return sNew
+		else:
+			return None
 
 
 	def getElements(self,elements_to_parse):
@@ -118,9 +143,9 @@ def parse_arguments():
 		help='Path to midi files')
 	parser.add_argument('-clean_path', type=str, default="../clean-data-1",
 		help='Specify where to store elements list and cleaned data')
-	parser.add_argument('-num_songs', type=int, default=50, 
+	parser.add_argument('-num_songs', type=int, default=100, 
 		help='Number of songs to extract')
-	parser.add_argument('-track', type=str, default='Voice',
+	parser.add_argument('-track', type=str, default='Piano',
 		help='Specify track/instrument to extract from each song \
 		(i.e. Voice, Piano, Guitar, etc.)')
 	parser.add_argument('-min_length', type=int, default=100, 
